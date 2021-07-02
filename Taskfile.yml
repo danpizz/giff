@@ -1,0 +1,13 @@
+version: '3'
+
+tasks:
+  deploy-sample-1:
+    desc: deploy the testdata/sample-1.yaml to AWS Cloudformation
+    cmds:
+      - |
+        aws cloudformation deploy \
+            --template-file testdata/sample-1.yaml \
+            --stack-name sample-giff-stack \
+            --parameter-overrides OtherPolicyArn=arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore \
+            --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM \
+            --tags Tag1="hello"
