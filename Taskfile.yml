@@ -11,3 +11,9 @@ tasks:
             --parameter-overrides OtherPolicyArn=arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore \
             --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM \
             --tags Tag1="hello"
+
+  build:
+    cmds:
+      - env GOOS=darwin GOARCH=amd64 go build -o giff_darwin_amd64
+      - env GOOS=darwin GOARCH=arm64 go build -o giff_darwin_arm64
+      - env GOOS=linux GOARCH=amd64 go build -o giff_linux_amd64
