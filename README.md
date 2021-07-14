@@ -72,22 +72,22 @@ giff change arn:aws:cloudformation:us-east-1:123456789012:changeSet/SampleChange
 
 ## Compiling
 
-[Download go](https://golang.org) then
+[Download go](https://golang.org) and [Task](https://taskfile.dev/#/) then
 ```
-go build
+task build
 ```
+
+See the Taskfile of `task -l` for other options.
 
 ## Testing
 
 ```
-go test ./cmd ./pkg
+task test
 ```
 
 The tests in the base directory will only work with an authenticated AWS session.
 
 ```
-task deploy-sample-1
-go test .
+task deploy-test-data
+task test-aws
 ```
-
-You can [download task here](https://taskfile.dev/#/), or you can just run the `aws` command from the `Taskfile`.
