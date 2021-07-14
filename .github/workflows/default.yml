@@ -21,9 +21,10 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
       - uses: actions/setup-go@v2
+      - uses: arduino/setup-task@v1
       
       - name: Build
-        run: go build
+        run: task build
 
       - name: Test
-        run: go test ./cmd/ ./pkg/
+        run: task test
