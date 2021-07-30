@@ -19,18 +19,17 @@ func TestCLI_diff_sample2(t *testing.T) {
 	cmd.Out = b
 	main()
 	out, _ := ioutil.ReadAll(b)
-	// println(string(out))
 	assert.Contains(t, string(out), "+  # Adding this\n+  SampleRole2:")
 }
 
 func TestCLI_changes_sample2(t *testing.T) {
-	os.Args = []string{"./giff", "changes", "sample-giff-stack", "testdata/sample-2.yaml"}
+	os.Args = []string{"./giff", "changes", "sample-giff-stack", "testdata/sample-2.yaml", "-t", "tag=tagdata"}
 	b := bytes.NewBufferString("")
 	cmd.Out = b
 	main()
 	out, _ := ioutil.ReadAll(b)
 	assert.Exactly(t,
-		"+     add: SampleRole2 - AWS::IAM::Role\n",
+		"+     add: SampleRole2 - AWS::IAM::Role\n*  modify: SampleRole (sample-giff-stack-sample-role) - AWS::IAM::Role / replacement: False / scope: Tags\n",
 		string(out))
 }
 

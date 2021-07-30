@@ -40,8 +40,9 @@ func NewChangesCmd(cfClient pkg.CFAPI, apiClient pkg.API) *cobra.Command {
 		Example: "giff change my-stack my-template.yaml -a Size=m4.tiny -v --no-delete-changeset\n" +
 			"giff change arn:aws:cloudformation:us-east-1:123456789012:changeSet/SampleChangeSet-direct/1a2345b6-0000-00a0-a123-00abc0abc000 --dump",
 	}
-	changesCmd.Flags().StringVarP(&Parameters, "all-parameters", "a", "", "All the template parameters: \"par1=value1 para2=value2 ...\"")
+	changesCmd.Flags().StringVarP(&Parameters, "all-parameters", "a", "", "All the template parameters: \"par1=value1 par2=value2 ...\"")
 	changesCmd.Flags().StringVarP(&ParametersOverride, "parameters-overrides", "p", "", "The input parameters for your stack template. If you don't specify a parameter, the stack's existing value is used. \"par1=value1 para2=value2 ...\"")
+	changesCmd.Flags().StringVarP(&Tags, "tags", "t", "", "The tags parameters to associate to the stack. \"tag1=value1 tag2=value2 ...\"")
 	changesCmd.Flags().BoolVar(&NoDeleteChangeset, "no-delete-changeset", false, "Don't remove the changeset, print its ARN")
 	changesCmd.Flags().BoolVarP(&Dump, "dump", "d", false, "Print the raw changeset")
 	return changesCmd
@@ -52,6 +53,7 @@ var StackName string
 
 var Parameters string
 var ParametersOverride string
+var Tags string
 var NoDeleteChangeset bool = false
 var ChangesetArn string
 var Dump bool = false
@@ -72,6 +74,7 @@ func changes(cmd *cobra.Command, cfClient pkg.CFAPI, apiClient pkg.API) (err err
 	}
 
 	var parameters []cfTypes.Parameter
+	var tags []cfTypes.Tag
 	var changesetArn string
 	if ChangesetArn != "" {
 		changesetArn = ChangesetArn
@@ -90,13 +93,17 @@ func changes(cmd *cobra.Command, cfClient pkg.CFAPI, apiClient pkg.API) (err err
 			parameters = pkg.ParameterListFromString(Parameters)
 		}
 
+		if Tags != "" {
+			tags = pkg.TagListFromString(Tags)
+		}
+
 		PrintfV("Creating changeset...")
 		templateBody, err := apiClient.ReadTemplateFile(TemplateFileName)
 		if err != nil {
 			return err
 		}
 
-		changesetArn, err = pkg.CreateChangeSet(cfClient, &StackName, &templateBody, parameters)
+		changesetArn, err = pkg.CreateChangeSet(cfClient, &StackName, &templateBody, parameters, tags)
 		if err != nil {
 			PrintfV("\n")
 			return err
@@ -147,17 +154,24 @@ func printChanges(cmd *cobra.Command, changes []pkg.GiffChange) {
 	for _, c := range changes {
 		switch c.Action {
 		case cfTypes.ChangeActionAdd:
-			cmd.Printf("+     add: %s - %s\n", *c.LogicalResourceId, *c.ResourceType)
+			cmd.Printf("+     add: %s - %s", *c.LogicalResourceId, *c.ResourceType)
 		case cfTypes.ChangeActionRemove:
-			cmd.Printf("-  remove: %s - %s\n", *c.LogicalResourceId, *c.ResourceType)
+			cmd.Printf("-  remove: %s - %s", *c.LogicalResourceId, *c.ResourceType)
 		case cfTypes.ChangeActionModify:
-			cmd.Printf("*  modify: %s (%s) - %s / replacement: %v\n", *c.LogicalResourceId, *c.PhysicalResourceId, *c.ResourceType, c.Replacement)
+			cmd.Printf("*  modify: %s (%s) - %s / replacement: %v", *c.LogicalResourceId, *c.PhysicalResourceId, *c.ResourceType, c.Replacement)
 		case cfTypes.ChangeActionDynamic:
-			cmd.Printf("* dynamic: %s (%s) - %s / replacement: %v\n", *c.LogicalResourceId, *c.PhysicalResourceId, *c.ResourceType, c.Replacement)
+			cmd.Printf("* dynamic: %s (%s) - %s / replacement: %v", *c.LogicalResourceId, *c.PhysicalResourceId, *c.ResourceType, c.Replacement)
 		case cfTypes.ChangeActionImport:
-			cmd.Printf("+  import: %s (%s) - %s\n", *c.LogicalResourceId, *c.PhysicalResourceId, *c.ResourceType)
+			cmd.Printf("+  import: %s (%s) - %s", *c.LogicalResourceId, *c.PhysicalResourceId, *c.ResourceType)
 		default:
-			cmd.Printf("%#v [unknown change type]\n", c)
+			cmd.Printf("%#v [unknown change type]", c)
 		}
+		if c.Scope != nil && len(c.Scope) != 0 {
+			cmd.Printf(" / scope:")
+			for _, s := range c.Scope {
+				cmd.Printf(" %s", s)
+			}
+		}
+		cmd.Printf("\n")
 	}
 }

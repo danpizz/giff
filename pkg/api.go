@@ -41,17 +41,25 @@ func GetStackParameters(api CFAPI, stackName *string) ([]cfTypes.Parameter, erro
 
 const changesetBaseName = "giff"
 
-func CreateChangeSet(api CFAPI, stackName *string, templateBody *string, parameterList []cfTypes.Parameter) (changeSetId string, err error) {
+func CreateChangeSet(api CFAPI, stackName *string, templateBody *string, parameterList []cfTypes.Parameter, tagList []cfTypes.Tag) (changeSetId string, err error) {
 
 	capabilities := []cfTypes.Capability{cfTypes.CapabilityCapabilityNamedIam}
-	changesetOutput, err := api.CreateChangeSet(&cf.CreateChangeSetInput{
+
+	createChangeSetInput := cf.CreateChangeSetInput{
 		StackName:     stackName,
 		ChangeSetName: aws.String(changesetBaseName + "-" + uniuri.New()),
 		ChangeSetType: "UPDATE",
 		TemplateBody:  templateBody,
-		Parameters:    parameterList,
 		Capabilities:  capabilities,
-	})
+	}
+	if parameterList != nil {
+		createChangeSetInput.Parameters = parameterList
+	}
+	if tagList != nil {
+		createChangeSetInput.Tags = tagList
+	}
+
+	changesetOutput, err := api.CreateChangeSet(&createChangeSetInput)
 	if err != nil {
 		return "", err
 	}

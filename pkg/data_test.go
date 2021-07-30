@@ -122,6 +122,7 @@ func TestExtractChanges_Tag(t *testing.T) {
 				PhysicalResourceId: &PhysicalResourceId,
 				Replacement:        cfTypes.ReplacementFalse,
 				ResourceType:       &ResourceType,
+				Scope:              []cfTypes.ResourceAttribute{"Tags"},
 			},
 		},
 		"error",
@@ -140,7 +141,6 @@ func TestExtractChanges_Parameter(t *testing.T) {
 	ResourceType := "AWS::EC2::Instance"
 	assert.Exactly(
 		t,
-		changes,
 		[]GiffChange{
 			{
 				Action:             cfTypes.ChangeActionModify,
@@ -148,8 +148,10 @@ func TestExtractChanges_Parameter(t *testing.T) {
 				PhysicalResourceId: &PhysicalResourceId,
 				Replacement:        cfTypes.ReplacementFalse,
 				ResourceType:       &ResourceType,
+				Scope:              []cfTypes.ResourceAttribute{"Tags"},
 			},
 		},
+		changes,
 		"error",
 	)
 }
@@ -166,7 +168,6 @@ func TestExtractChanges_Replacement(t *testing.T) {
 	ResourceType := "AWS::EC2::Instance"
 	assert.Exactly(
 		t,
-		changes,
 		[]GiffChange{
 			{
 				Action:             cfTypes.ChangeActionModify,
@@ -174,8 +175,10 @@ func TestExtractChanges_Replacement(t *testing.T) {
 				PhysicalResourceId: &PhysicalResourceId,
 				Replacement:        cfTypes.ReplacementTrue,
 				ResourceType:       &ResourceType,
+				Scope:              []cfTypes.ResourceAttribute{"Tags", "Properties"},
 			},
 		},
+		changes,
 		"error",
 	)
 }
@@ -189,7 +192,6 @@ func TestExtractChanges_AddAndRemove(t *testing.T) {
 
 	assert.Exactly(
 		t,
-		changes,
 		[]GiffChange{
 			{
 				Action:             cfTypes.ChangeActionAdd,
@@ -197,6 +199,7 @@ func TestExtractChanges_AddAndRemove(t *testing.T) {
 				PhysicalResourceId: nil,
 				Replacement:        "",
 				ResourceType:       aws.String("AWS::AutoScaling::AutoScalingGroup"),
+				Scope:              []cfTypes.ResourceAttribute{},
 			},
 			{
 				Action:             cfTypes.ChangeActionAdd,
@@ -204,6 +207,7 @@ func TestExtractChanges_AddAndRemove(t *testing.T) {
 				PhysicalResourceId: nil,
 				Replacement:        "",
 				ResourceType:       aws.String("AWS::AutoScaling::LaunchConfiguration"),
+				Scope:              []cfTypes.ResourceAttribute{},
 			},
 			{
 				Action:             cfTypes.ChangeActionRemove,
@@ -211,8 +215,10 @@ func TestExtractChanges_AddAndRemove(t *testing.T) {
 				PhysicalResourceId: aws.String("i-1abc23d4"),
 				Replacement:        "",
 				ResourceType:       aws.String("AWS::EC2::Instance"),
+				Scope:              []cfTypes.ResourceAttribute{},
 			},
 		},
+		changes,
 		"error",
 	)
 }

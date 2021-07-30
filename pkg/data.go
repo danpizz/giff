@@ -24,6 +24,21 @@ func ParameterListFromString(parametersString string) []cfTypes.Parameter {
 	return parameterList
 }
 
+func TagListFromString(tagsString string) []cfTypes.Tag {
+	var parameterList []cfTypes.Tag
+	for _, keyValue := range strings.Split(tagsString, " ") {
+		p := strings.Split(keyValue, "=")
+		if len(p) != 2 {
+			continue
+		}
+		parameterList = append(parameterList, cfTypes.Tag{
+			Key:   &p[0],
+			Value: &p[1],
+		})
+	}
+	return parameterList
+}
+
 func OverrideParameters(stackParameters []cfTypes.Parameter, inputParameters []cfTypes.Parameter) ([]cfTypes.Parameter, error) {
 	for _, v := range inputParameters {
 		modified := false
@@ -59,6 +74,7 @@ type GiffChange struct {
 	PhysicalResourceId *string
 	Replacement        cfTypes.Replacement
 	ResourceType       *string
+	Scope              []cfTypes.ResourceAttribute
 }
 
 func PrettyJson(i interface{}) string {
@@ -81,6 +97,7 @@ func ExtractChanges(describeChangeSetOutput *cf.DescribeChangeSetOutput) ([]Giff
 		change.PhysicalResourceId = c.ResourceChange.PhysicalResourceId
 		change.Replacement = c.ResourceChange.Replacement
 		change.ResourceType = c.ResourceChange.ResourceType
+		change.Scope = c.ResourceChange.Scope
 		changes = append(changes, change)
 	}
 	return changes, nil
