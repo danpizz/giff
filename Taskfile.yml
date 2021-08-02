@@ -18,13 +18,8 @@ tasks:
             --parameter-overrides OtherPolicyArn=arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore \
             --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM \
             --tags Tag1="hello"
-
-  deploy-test-data2:
-    desc: deploy the testdata/sample-10.yaml to AWS Cloudformation for use with `test-aws`
-    cmds:
-      - |
         aws cloudformation deploy \
-            --template-file testdata/sample-10.yaml \
+            --template-file testdata/sample-volume.yaml \
             --stack-name sample-giff-stack-2 \
             --parameter-overrides Zone=eu-west-1a Size=1 \
             --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM \

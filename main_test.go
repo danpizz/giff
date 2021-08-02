@@ -46,8 +46,8 @@ func TestCLI_changes_sample_3(t *testing.T) {
 		string(out))
 }
 
-func TestCLI_changes_sample_10(t *testing.T) {
-	os.Args = []string{"./giff", "changes", "sample-giff-stack-2", "testdata/sample-10.yaml", "-p", "Size=2", "-t", "MyTag=hello"}
+func TestCLI_changes_param_and_tag(t *testing.T) {
+	os.Args = []string{"./giff", "changes", "sample-giff-stack-2", "testdata/sample-volume.yaml", "-p", "Size=2", "-t", "MyTag=hello"}
 	b := bytes.NewBufferString("")
 	cmd.Out = b
 	main()
