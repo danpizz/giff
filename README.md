@@ -10,7 +10,7 @@
 
 ```
 +     add: SampleRole2 - AWS::IAM::Role
-*  modify: SampleRole (sample-giff-stack-sample-role) - AWS::IAM::Role / replacement: False
+*  modify: SampleRole (sample-giff-stack-sample-role) - AWS::IAM::Role / replacement: False / scope: Tags
 ```
 
 ## Diffing
@@ -37,7 +37,7 @@ giff diff my-stack my-template.yaml -d colordiff
 ```
 giff changes sample-1-stack testdata/sample-2.yaml -p OtherPolicyArn=newArn
 +     add: SampleRole2 - AWS::IAM::Role
-*  modify: SampleRole (sample-giff-stack-sample-role) - AWS::IAM::Role / replacement: False
+*  modify: SampleRole (sample-giff-stack-sample-role) - AWS::IAM::Role / replacement: False / scope: Tags
 ```
 
 If used with 2 arguments, the stack name and the template file, `giff changes` shows the changes caused by deploying the specified template file over the named stack. 
@@ -50,6 +50,9 @@ It will create a temporary changeset, show a easy to read list of changes, and t
 
 -a, --all-parameters
 : specify the complete listof parameters. This flag will cause an error if there are some missing parameters.
+
+-t, --tags
+: tags to associate to the stack
 
 --no-delete-changeset
 : don't delete the temporary changeset and print its ARN
@@ -67,7 +70,7 @@ With one single argument, a changeset ARN, giff will show a the list of changes 
 ```
 giff change arn:aws:cloudformation:us-east-1:123456789012:changeSet/SampleChangeSet-direct/1a2345b6-0000-00a0-a123-00abc0abc000
 +     add: SampleRole2 - AWS::IAM::Role
-*  modify: SampleRole (sample-giff-stack-sample-role) - AWS::IAM::Role / replacement: False
+*  modify: SampleRole (sample-giff-stack-sample-role) - AWS::IAM::Role / replacement: False / scope: Tags
 ```
 
 ## Compiling
