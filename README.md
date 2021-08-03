@@ -13,7 +13,7 @@
 *  modify: SampleRole (sample-giff-stack-sample-role) - AWS::IAM::Role / replacement: False / scope: Tags
 ```
 
-## Diffing
+## Template diffing
 
 ```
 +  SampleRole2:
@@ -40,28 +40,20 @@ giff changes sample-1-stack testdata/sample-2.yaml -p OtherPolicyArn=newArn
 *  modify: SampleRole (sample-giff-stack-sample-role) - AWS::IAM::Role / replacement: False / scope: Tags
 ```
 
-If used with 2 arguments, the stack name and the template file, `giff changes` shows the changes caused by deploying the specified template file over the named stack. 
+If used with two arguments, the stack name and the template file, `giff changes` shows the changes caused by deploying the specified template file over the named stack. 
 It will create a temporary changeset, show a easy to read list of changes, and then delete the changeset.
 
 #### Flags
 
--p, --parameters-overrides
-: specify a partial list of parameters `Param1=Value1 Param2=Value2`
+`--parameters-overrides` a partial list of parameters `Param1=Value1 Param2=Value2`
 
--a, --all-parameters
-: specify the complete listof parameters. This flag will cause an error if there are some missing parameters.
+`--all-parameters` the complete listof parameters. This flag will cause an error if there are some missing parameters.
 
--t, --tags
-: tags to associate to the stack
+`--tags` tags to associate to the stack
 
---no-delete-changeset
-: don't delete the temporary changeset and print its ARN
+`--no-delete-changeset` don't delete the temporary changeset and print its ARN
 
---dump
-: print the full raw changeset in JSON format
-
--v
-: verbose
+`--dump` print the full raw changeset in JSON format
 
 ## Showing changes of existing changesets
 
