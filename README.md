@@ -64,25 +64,3 @@ giff change arn:aws:cloudformation:us-east-1:123456789012:changeSet/SampleChange
 +     add: SampleRole2 - AWS::IAM::Role
 *  modify: SampleRole (sample-giff-stack-sample-role) - AWS::IAM::Role / replacement: False / scope: Tags
 ```
-
-## Compiling
-
-[Download go](https://golang.org) and [Task](https://taskfile.dev/#/) then
-```
-task build
-```
-
-See the Taskfile of `task -l` for other options.
-
-## Testing
-
-```
-task test
-```
-
-The tests in the base directory will only work with an authenticated AWS session.
-
-```
-task deploy-test-data
-task test-aws
-```

@@ -15,6 +15,5 @@
 # vendor/
 
 /giff*
-/cliff
 *.code-workspace
 /coverage.html
