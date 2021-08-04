@@ -17,3 +17,4 @@
 /giff*
 *.code-workspace
 /coverage.html
+/upload.sh
