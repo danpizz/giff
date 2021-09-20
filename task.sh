@@ -34,7 +34,7 @@ build_all() {
     GOOS=darwin GOARCH=amd64 go build -ldflags="${ldflags}" -o "giff_darwin_amd64_${long_desc}"
     GOOS=darwin GOARCH=arm64 go build -ldflags="${ldflags}" -o "giff_darwin_arm64_${long_desc}"
     GOOS=linux GOARCH=amd64 go build -ldflags="${ldflags}" -o "giff_linux_amd64_${long_desc}"
-    GOOS=linux GOARCH=amd64 go build -ldflags="${ldflags}" -o "giff_linux_arm64_${long_desc}"
+    GOOS=linux GOARCH=arm64 go build -ldflags="${ldflags}" -o "giff_linux_arm64_${long_desc}"
 }
 
 test() {
