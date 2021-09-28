@@ -26,7 +26,7 @@ func NewDiffCmd(cfClient pkg.CFAPI, apiClient pkg.API) (diffCmd *cobra.Command) 
 		Example: "giff diff my-stack my-template.yaml\n",
 	}
 	diffCmd.Flags().StringVarP(&diffCommand, "diff-command", "d", "diff", "Command on the PATH to use to create the diff")
-	return
+	return diffCmd
 }
 
 var diffCommand string
@@ -57,10 +57,12 @@ func diff(cmd *cobra.Command, args []string, cfClient pkg.CFAPI, apiClient pkg.A
 		return err
 	}
 
-	diffOut, err := pkg.Diff("gliff", diffCommand, []byte(*stackTemplateOut.TemplateBody), templateFileData)
+	diffOut, err := pkg.Diff("giff", diffCommand, []byte(*stackTemplateOut.TemplateBody), templateFileData)
 	if err != nil {
 		return err
 	}
-	cmd.Printf("%s\n", diffOut)
+	if len(diffOut) > 0 {
+		cmd.Printf("%s\n", diffOut)
+	}
 	return nil
 }

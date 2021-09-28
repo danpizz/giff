@@ -19,6 +19,11 @@ deploy-test-data() {
         --tags Tag1="hello"
 }
 
+delete-test-data() {
+    aws cloudformation delete-stack --stack-name sample-giff-stack
+    aws cloudformation delete-stack --stack-name sample-giff-stack-2
+}
+
 clean() {
     rm giff giff_*
     go clean

@@ -18,7 +18,7 @@ func NewChangesCmd(cfClient pkg.CFAPI, apiClient pkg.API) *cobra.Command {
 		Long:  "Create a temporary changeset and display an easy to read summary of the changes created by deploying a local template and some (optional) parameters",
 		Run: func(cmd *cobra.Command, args []string) {
 			if err := changes(cmd, cfClient, apiClient); err != nil {
-				cmd.PrintErr(err)
+				cmd.PrintErrln(err)
 				os.Exit(1)
 			}
 		},
@@ -149,7 +149,7 @@ func changes(cmd *cobra.Command, cfClient pkg.CFAPI, apiClient pkg.API) (err err
 
 func printChanges(cmd *cobra.Command, changes []pkg.GiffChange) {
 	if len(changes) == 0 {
-		cmd.PrintErrln("No changes")
+		cmd.Println("No changes")
 	}
 	for _, c := range changes {
 		switch c.Action {
